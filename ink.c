@@ -16,17 +16,6 @@ struct weight {
 	double weight;
 };
 
-int checkbox(dot* d, int num)
-{
-	int sum = 0;
-	for (int i = 0; i < num; i++)
-	{
-		sum += d[i].check;
-	}
-	if (sum == num)
-		return 1;
-}
-
 void main()
 {
 	int dots;
