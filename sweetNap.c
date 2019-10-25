@@ -1,55 +1,66 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct time1 {
+	int h;
+	int m;
+};
+
+struct time2 {
+	int h;
+	int m;
+};
 
 typedef struct time
 {
-	int time1;
-	int time2;
+	struct time1 time1; // start time
+	struct time2 time2; // end time
+	char work[255];
 }time;
-
-int checkLine(int l)
-{
-	if (l >= 100)
-		return 0;
-}
-
-int checkTime(int time1, int time2)
-{
-
-	if (time1 > 10 && time1 < 18)
-	{
-		if (time2 > 0 && time2 < 60)
-		{
-			return 0;
-		}
-	}
-	else
-		return 1;
-}
-
-void input(time t[], int i)
-{
-	char doing[255];
-	scanf_s("%d:%d %d:%d %s", &t[i].time1, &t[i].time1, &t[i + 1].time1 , t[i + 1].time2, &doing);
-
-	checkTime(t[i].time1, t[i].time2);
-	checkTime(t[i + 1].time1, t[i + 1].time2);
-}
 
 void main()
 {
 	int line;
-	time t[100];
-	scanf_s("%d", &line);
-	
-	if (checkLine(line) == 0)
+	int max = 0; // Longest nap time.
+	int maxIndex;
+	printf("< Your schedule >\n");
+	printf("Number?\n");
+	scanf_s("%d", &line); // Check line condition (line<100)
+	if (line >= 100)
 	{
-		for (int i = 0; i < line; i++)
+		printf("Error! Please try again.");
+		exit(0);
+	}
+	time *t = (time*)malloc(sizeof(time)*line);
+
+	printf("\nSpecific schedule\n");
+	for (int i = 0; i < line; i++)
+	{
+		scanf("%d:%d %d:%d", &t[i].time1.h, &t[i].time1.m , &t[i].time2.h, &t[i].time2.m);
+		gets(t[i].work);
+		if (t[i].time1.h < 10 || t[i].time1.h>18 || t[i].time1.m<0 || t[i].time1.m>59 || t[i].time2.m < 0 
+			|| t[i].time2.m > 59 || t[i].time2.h < 10 || t[i].time2.h>18) // Check time condition (10<hh<18), (00<mm<60)
 		{
-			input(t, i);
+			printf("Error! Please try again.");
+			break;
 		}
 	}
-	else
-		printf("The line have to be less than 100");
 
-	printf("Day #d: the longest nap starts at hh:mm and will last for [H hours and]M minutes");
+	for (int i = 0; i < line - 1; i++)
+	{
+		if (max < ((t[i + 1].time1.h * 60 + t[i + 1].time1.m) - (t[i].time2.h * 60 + t[i].time2.m)))
+		{
+			max = ((t[i + 1].time1.h) *60 + t[i + 1].time1.m) - ((t[i].time2.h) * 60 + t[i].time2.m);
+			maxIndex = i;
+		}
+	}
+
+	if (max < 60)
+		printf("\nDay #1: the longest nap starts at %d:%d and will last for %d minutes",
+			t[maxIndex].time2.h, t[maxIndex].time2.m, max);
+	else
+		printf("\nDay #1: the longest nap starts at %d:%d and will last for %d hours and %d minutes",
+			t[maxIndex].time2.h, t[maxIndex].time2.m, max / 60, max % 60);
 }
