@@ -13,12 +13,22 @@ void Merge(int* A, int s, int m, int n)
 		else
 			tmp[k++] = A[j++];
 	}
-	while (i <= m)
-		tmp[k++] = A[i++];
-	while (j <= n)
-		tmp[k++] = A[j++];
-	for (int a = s; a <= n; a++)
-		A[a] = tmp[a];
+	
+	if (i > m)
+	{
+		for (int h = j; h <= n; h++)
+			tmp[k++] = A[h];
+	}
+	else
+	{
+		for (int h = i; h <= m; h++)
+			tmp[k++] = A[h];
+	}
+
+	for (int h = s; h <= n; h++)
+	{
+		A[h]=tmp[h];
+	}
 }
 
 void MergeSort(int* A, int s, int n)
@@ -53,7 +63,7 @@ void main()
 	}
 	
 	printf("\n\nAfter\n");
-	MergeSort(arr, 0, num); // merge sort
+	MergeSort(arr, 0, num-1); // merge sort
 	for (int i = 0; i < num; i++)
 	{
 		printf("%d\t", arr[i]);
